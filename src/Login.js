@@ -11,8 +11,15 @@ export default class Login extends Component{
     
     login(){
         let provider = new firebase.auth.GoogleAuthProvider()
+        provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly')
+
         firebase.auth().signInWithPopup(provider).then(result=>{ //se puede iniciar con un rendirect tambien
             console.log(result)
+
+            let token = result.credential.accessToken
+            console.log(token)
+        }).catch(err =>{
+            console.log(err)
         })
     }
 
