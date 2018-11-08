@@ -7,6 +7,33 @@ export default class Login extends Component{
     constructor(props){
         super(props)
         this.login = this.login.bind(this)
+
+        this.state = {
+            userLoggedIn: false
+        }
+    }
+
+    componentDidMount(){
+        firebase.auth().onAuthStateChanged((user) =>{
+            if(user){
+                //login on
+                this.setState({
+                    userLoggedIn: true
+                })
+            }else{  
+                //login off
+            }
+        })
+    }
+
+    logInButton(){
+        if(this.state.userLoggedIn) return null
+
+        return (
+            <Button variant="contained" onClick={this.login} >
+                Login with Google
+            </Button>
+        )
     }
     
     login(){
@@ -26,9 +53,7 @@ export default class Login extends Component{
     render(){
         return (
             <div>
-                <Button variant="contained" onClick={this.login} >
-                    Login with Google
-                </Button>
+                {this.logInButton()}
             </div>
         )
     }
