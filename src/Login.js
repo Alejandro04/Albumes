@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import firebase from './initializers/firebase';
+import Avatar from '@material-ui/core/Avatar';
+import { withStyles } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 
-export default class Login extends Component{
+class Login extends Component{
 
     constructor(props){
         super(props)
         this.login = this.login.bind(this)
+        this.logout = this.logout.bind(this)
 
         this.state = {
-            userLoggedIn: false
+            userLoggedIn: false,
+            photoURL: ''
         }
     }
 
@@ -18,16 +24,26 @@ export default class Login extends Component{
             if(user){
                 //login on
                 this.setState({
-                    userLoggedIn: true
+                    userLoggedIn: true,
+                    photoURL: user.providerData[0].photoURL
                 })
             }else{  
                 //login off
+                this.setState({
+                    userLoggedIn: false,
+                    photoURL: ''
+                })
             }
         })
     }
 
     logInButton(){
-        if(this.state.userLoggedIn) return null
+        if(this.state.userLoggedIn) return (
+            [
+                <Avatar src={this.state.photoURL}/>,
+                (<IconButton color="inherit" onClick={this.logout}><ExitToApp/></IconButton>)
+            ]
+        )
 
         return (
             <Button variant="contained" onClick={this.login} >
@@ -50,11 +66,22 @@ export default class Login extends Component{
         })
     }
 
+    logout(){
+        firebase.auth().signOut().then()
+    }
+
     render(){
         return (
-            <div>
+            <div className={this.props.classes.container}>
                 {this.logInButton()}
             </div>
         )
     }
 }
+
+export default withStyles({
+    container: {
+        display: 'flex',
+        flexDirection: 'row'
+    }
+})(Login)

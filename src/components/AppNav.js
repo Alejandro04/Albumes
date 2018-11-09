@@ -11,7 +11,7 @@ class AppNav extends Component{
         return (
             <div>
                 <AppBar position='static'>
-                    <Toolbar>
+                    <Toolbar className={this.props.classes.nav}>
                         <Typografy variant="h6" component="h1" className={this.props.classes.grow}>
                             Albums
                         </Typografy>
@@ -24,5 +24,8 @@ class AppNav extends Component{
 }
 
 export default withStyles({
-    grow: {flexGrow:1, textAlign:'left'}
+    grow: {flexGrow:1, textAlign:'left'},
+    nav: {
+        color: 'white'
+    }
 })(AppNav);
