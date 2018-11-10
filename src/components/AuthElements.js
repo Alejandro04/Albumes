@@ -7,9 +7,9 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 
 const AuthElements = function(props){
     const logInButton = ()=>{
-        if(props.userLoggedIn) return (
+        if(props.user) return (
             [
-                <Avatar src={props.photoURL}/>,
+                <Avatar src={props.user.providerData[0].photoURL}/>,
                 (<IconButton color="inherit" onClick={props.logout}><ExitToApp/></IconButton>)
             ]
         )

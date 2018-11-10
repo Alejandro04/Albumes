@@ -13,29 +13,6 @@ class Login extends Component{
         super(props)
         this.login = this.login.bind(this)
         this.logout = this.logout.bind(this)
-
-        this.state = {
-            userLoggedIn: false,
-            photoURL: ''
-        }
-    }
-
-    componentDidMount(){
-        firebase.auth().onAuthStateChanged((user) =>{
-            if(user){
-                //login on
-                this.setState({
-                    userLoggedIn: true,
-                    photoURL: user.providerData[0].photoURL
-                })
-            }else{  
-                //login off
-                this.setState({
-                    userLoggedIn: false,
-                    photoURL: ''
-                })
-            }
-        })
     }
 
     login(){
@@ -64,9 +41,8 @@ class Login extends Component{
             <AuthElements
                 login={this.login}
                 logout={this.logout}
-                userLoggedIn={this.state.userLoggedIn}
                 token={this.props.token}
-                photoURL={this.state.photoURL}
+                user={this.props.user}
             />
         )
     }
@@ -74,7 +50,8 @@ class Login extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        token: state.token
+        token: state.token,
+        user: state.user
     }
 } 
 
