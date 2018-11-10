@@ -15,6 +15,10 @@ class Login extends Component{
         this.logout = this.logout.bind(this)
     }
 
+    componentDidMount(){
+        console.log(this.props.token)
+    }
+
     login(){
         let provider = new firebase.auth.GoogleAuthProvider()
         provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly')
