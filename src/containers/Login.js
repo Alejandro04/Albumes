@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import firebase from './initializers/firebase';
-import Avatar from '@material-ui/core/Avatar';
-import { withStyles } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import ExitToApp from '@material-ui/icons/ExitToApp';
+import firebase from '../initializers/firebase';
+
+import { connect } from 'react-redux';
+import { saveToken, clearToken } from '../initializers/actions';
+
+import AuthElements from '../components/AuthElements';
+
 
 class Login extends Component{
 
@@ -37,21 +38,6 @@ class Login extends Component{
         })
     }
 
-    logInButton(){
-        if(this.state.userLoggedIn) return (
-            [
-                <Avatar src={this.state.photoURL}/>,
-                (<IconButton color="inherit" onClick={this.logout}><ExitToApp/></IconButton>)
-            ]
-        )
-
-        return (
-            <Button variant="contained" onClick={this.login} >
-                Login with Google
-            </Button>
-        )
-    }
-    
     login(){
         let provider = new firebase.auth.GoogleAuthProvider()
         provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly')
@@ -60,6 +46,7 @@ class Login extends Component{
             console.log(result)
 
             let token = result.credential.accessToken
+            this.props.saveToken(token)
             console.log(token)
         }).catch(err =>{
             console.log(err)
@@ -67,21 +54,33 @@ class Login extends Component{
     }
 
     logout(){
-        firebase.auth().signOut().then()
+        firebase.auth().signOut().then(() => {
+            this.props.clearToken()
+        })
     }
 
     render(){
         return (
-            <div className={this.props.classes.container}>
-                {this.logInButton()}
-            </div>
+            <AuthElements
+                login={this.login}
+                logout={this.logout}
+                userLoggedIn={this.state.userLoggedIn}
+                token={this.props.token}
+                photoURL={this.state.photoURL}
+            />
         )
     }
 }
 
-export default withStyles({
-    container: {
-        display: 'flex',
-        flexDirection: 'row'
+const mapStateToProps = (state) => {
+    return {
+        token: state.token
     }
-})(Login)
+} 
+
+const mapDispatchToProps = {
+    saveToken,
+    clearToken
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
